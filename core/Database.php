@@ -44,7 +44,7 @@ public function findOrfail(){
 
 $result =$this->find();
 
-if(!$result){
+if(! $result){
     abort();
 }
 return $result;
