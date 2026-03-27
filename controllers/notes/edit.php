@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 use core\App;
+
 
 $db = App::resolve('core\Database'); 
 
@@ -12,7 +13,9 @@ $note = $db -> query('Select * from notes where id = :id',
 
 authorize($note['user_id'] === $current_user_id);
 
-view("notes/show.view.php", [
-    'heading' => 'Note',
+
+view("notes/edit.view.php", [
+    'heading' => 'Edit Note',
+    'errors' => [], 
     'note' => $note
-] );  
+]);  
