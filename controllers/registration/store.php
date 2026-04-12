@@ -31,19 +31,18 @@ $db = App::resolve(Database::class);
 $user = $db->query('select * from users where email = ?', [$email])->find();
 
 if($user){
-
-header('location: /');
+    header('location: /');
+    exit();
 } else{
+    $db -> query('INSERT INTO users (email,password) VALUES (:email, :password)', [
+        'email' => $email,
+        'password' => password_hash($password,PASSWORD_BCRYPT)
+    ]);
 
-$db -> query('INSERT INTO users (email,password) VALUES (:email, :password)', [
-    'email' => $email,
-    'password' => $password
-]);
+    login([
+        'email' => $email
+    ]);
 
-$_SESSION['user'] = [
-    'email' => $email
-];
-
-header('location: /');
-exit();
+    header('location: /');
+    exit();
 }
