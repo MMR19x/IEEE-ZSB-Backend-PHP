@@ -75,6 +75,10 @@ public function route($uri, $method){
  $this->abort();
 }
 
+public function previousURL(){
+    return $_SERVER['HTTP_REFERER'];    
+}
+
  protected function abort($code = 404){
 
  http_response_code($code);

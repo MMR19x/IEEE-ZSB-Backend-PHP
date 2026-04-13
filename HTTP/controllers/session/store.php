@@ -4,23 +4,21 @@ use core\Authenticator;
 use HTTP\Forms\Loginform;
 
 
-
-$email = $_POST['email'];
-$password = $_POST['password'];
-
 // match credentials
-$form = new Loginform();
 
-if($form-> validate($email , $password)){
-    $auth = new Authenticator();
-    
-    if($auth->attempt($email,$password)){
-        redirect('/');
+$form = Loginform::validate($attributes = [
+    'email' => $_POST['email'],
+    'password' => $_POST['password']
+]);
+
+$SignedIn = (new Authenticator) -> attempt(
+    $attributes['email'] , $attributes['password']);
+
+if(!$SignedIn){
+    $form-> error(
+        'email' , 'No matching account found for that email address and password!'
+        )-> throw();
     }
-    $form-> error($email , 'No matching account found for that email address and password!');
-} 
+        
+redirect('/');
 
-
-return view('session/create.view.php', [
-        'errors' => $form-> errors()
-    ]);

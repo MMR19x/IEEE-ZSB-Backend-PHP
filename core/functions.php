@@ -63,6 +63,11 @@ setcookie('PHPSESSID' , '' , time() - 3600 , $params['path'] , $params['domain']
 }
 
 function redirect($path){
-    header("location : {$path}");
+    header("Location: {$path}");
     exit();
+}
+
+function old($key , $default = ''){
+
+    return core\Session::get('old') [$key] ?? $default;
 }
