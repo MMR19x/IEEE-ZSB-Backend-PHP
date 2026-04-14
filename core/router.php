@@ -69,10 +69,14 @@ public function route($uri, $method){
             // apply middleware
             Middleware::resolve($route['middleware']);
              
-            return require base_path($route['controller']);
+            return require base_path('HTTP/controllers/' . $route['controller']);
         }
     }
  $this->abort();
+}
+
+public function previousURL(){
+    return $_SERVER['HTTP_REFERER'];    
 }
 
  protected function abort($code = 404){

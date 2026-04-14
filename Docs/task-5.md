@@ -1,3 +1,4 @@
+
 # Web Security & Hacking Protection Guide
 
 ## 1. Core Principles of Security

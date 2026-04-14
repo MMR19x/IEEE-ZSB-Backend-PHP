@@ -1,0 +1,31 @@
+{
+    "name": "victus/demo",
+    "authors": [
+        {
+            "name": "MMRclear",
+            "email": "mohamedmahmued128@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/collections": "^13.4"
+    }, 
+    "autoload": {
+        "psr-4": {
+            "core\\" :"core/",
+            "HTTP\\" :"HTTP/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^4.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
