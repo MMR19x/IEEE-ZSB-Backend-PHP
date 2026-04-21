@@ -1,223 +1,312 @@
 
 # PHP OOP Research Questions
 
-### Difference between Class and Object.
+### Inhertiance 
 
-* **Class** : A blueprint, template, or "user-defined data type" that defines the structure (properties) and behavior (methods) for a specific entity.
+* **Inheritance** allows classes to share their attributes, methods and functionalities to other classes. So in order to link those classes inheritance adopts a hierarchical schema relationship.
 
-`class Cars {
-  // PHP code goes here...
-}`
+* In inheritance hierarchy we have the parent class which is the class that gives its features to another class. They can also be called base class or super class.
+* On the other hand we have the child class which is the class that inherits the features from another class. They can also be called sub class or derived class.
 
-* **Object**: A concrete, individual "instance" of a class that exists in memory and contains actual data.
-
-`$objectName = new ClassName($value);`
-
+* The main benefit of inheritance in Object-Oriented Programming (OOP) is code reusability, which allows child classes to automatically inherit, reuse, and extend the methods and fields of a parent class. This reduces code redundancy, minimizes development time, and increases maintainability by allowing changes to be made in one place. 
 
 ```php
 <?php
-class Car {  // Class definition
-    public $brand, $model, $year;
-    function __construct($brand, $model, $year) {
-        $this->brand = $brand;
-        $this->model = $model;
-        $this->year = $year;
-    }
-    function displayInfo() {
-        echo "$this->brand $this->model, $this->year";
-    }
-}
-$car = new Car("Toyota", "Corolla", 2021);  // define object from class
-$car->displayInfo(); 
-?>
-```
----
+// Parent class
+class Fruit {
+  public $name;
+  public $color;
 
-### $this vs. self::
+  public function __construct($name, $color) {
+    $this->name = $name;
+    $this->color = $color;
+  }
 
-* **self ::** : The self operator represents the current class and thus is used to access class variables or static variables because these members belong to a class rather than the object of that class. `self::$static_member`
-
-* **$this** : represents the current object of a class. It is used to access non-static members of a class. `$this->name = $name;`
-
-| Feature | `$this` | `self` |
-| :--- | :--- | :--- |
-| **Refers to** | The current **object** (instance). | The current **class** definition. |
-| **Context** | Non-static context. | Static context. |
-| **Accesses** | Properties and methods specific to an instance. | Static properties, static methods, and constants. |
-| **Operator** | Object operator (`->`). | Scope Resolution Operator (`::`). |
-| **Required?** | No, if you aren't using objects. | Yes, for static members. |
-
-* You use `$this` for Instance Members. This is for anything that changes from one object to another.
-
-* You use `self` for Static Members. This is for anything that is exactly the same for every single object created from that class.
-
----
-
-### public, protected, and private 
-
-Public, private and protected are called access modifiers. The visibility of a property, a method or a constant can be defined by prefixing the declaration with these keywords. 
-
-* **Public** : can be accessed everywhere.
-
-* **protected** : it can be accessed only within the class itself and by inheriting child classes.
-
-* **Private** : it may only be accessed by the class that defines the member.
-
-The "Cooling System" Analogy: By making the property private, you protect the "internal machinery." The only way to change the temperature is through a method that includes Validation Logic (Safety Constraints).
-
-```php
-class CoolingSystem {
-    private $targetTemp = 22;
-
-    // The "Gatekeeper" method
-    public function setTemperature($newTemp) {
-        // Safety check: The machine can only handle 16°C to 30°C
-        if ($newTemp >= 16 && $newTemp <= 30) {
-            $this->targetTemp = $newTemp;
-            echo "Temperature set to " . $this->targetTemp . "°C";
-        } else {
-            // Rejection: Protects the hardware from "User Data"
-            echo "Error: Temperature out of safe engineering limits!";
-        }
-    }
+  public function intro() {
+    echo "The fruit is $this->name and the color is $this->color.<br>";
+  }
 }
 
-$ac = new CoolingSystem();
-$ac->setTemperature(25);   // Success: 25 is safe.
-$ac->setTemperature(500);  // Blocked: The system stays safe at 25.
-```
----
-
-##  Typed Properties
-
-**Typed Properties** allow you to declare the data type a property must hold.
-
-### Benefits:
-
-1. **Type Safety**: Prevents bugs by ensuring only correct data types are assigned
-2. **Self-Documenting**: Makes code clearer about what data is expected
-3. **IDE support**: Catches type mismatches immediately and Better autocomplete.
-
-### PHP Example - WITHOUT Typed Properties:
-
-```php
-<?php
-class Product {
-    public $name;
-    public $price;
-    public $inStock;
-
-    public function __construct($name, $price, $inStock) {
-        $this->name = $name;
-        $this->price = $price;
-        $this->inStock = $inStock;
-    }
-
-    public function calculateTotal($quantity) {
-        return $this->price * $quantity;  // What if price is a string?
-    }
+// Strawberry is child class which inherited from Fruit
+class Strawberry extends Fruit {
+  public function message() {
+    echo "Am I a fruit or a berry? ";
+  }
 }
 
-// BUG: Wrong types can be passed!
-$product = new Product("Laptop", "expensive", "yes");  // price is string!
-
-// This will cause unexpected behavior or errors
-// echo $product->calculateTotal(2);  // "expensive" * 2 = error or 0
-?>
-```
-
-### PHP Example - WITH Typed Properties:
-
-```php
-<?php
-class Product {
-    public string $name;        // Must be string
-    public float $price;        // Must be float
-    public bool $inStock;       // Must be boolean
-
-    public function __construct(string $name, float $price, bool $inStock) {
-        ...
-    }
-
-    public function calculateTotal(int $quantity): float {
-        ...
-    }
-}
-?>
-```
-
-### Common Type Declarations:
-
-```php
-<?php
-class TypeExamples {
-    public int $age;                    // Integer
-    public float $salary;               // Float/decimal
-    public string $name;                // String
-    public bool $isActive;              // Boolean
-    public array $hobbies;              // Array
-    public ?string $middleName;         // Nullable string (can be null)
-    public DateTime $createdAt;         // Object type
-}
+$strawberry = new Strawberry("Strawberry", "red");
+$strawberry->intro();
+$strawberry->message();
 ?>
 ```
 
 ---
 
-## Constructor Methods
+### Final keyword
 
-* **__construct()** Method: __construct is a public magic method that is used to create and initialize a class object. __construct assigns some property values while creating the object. This method is automatically called when an object is created.
+* The `final` keyword in PHP is used to restrict inheritance and prevent further modifications to specific parts of your object-oriented code.
 
-* __construct is a public magic method.
-* __construct is a method that must have public visibility
-* __construct method can accept one and more arguments.
-* __construct method is used to create an object.
-* __construct method can call the class method or functions
-* __construct method can call constructors of other classes also.
-
-`function __construct() {
-    // Initialize the object properties
-}`
-
-* **Default Constructor**:  By default, __construct() method has no parameters. The values passed to the default constructor are default.
-
-* **Parameterized Constructor**: In parameterized constructor __construct() method takes one and more parameters. You can provide different values to the parameters.
-
-* **Copy Constructor**: In the copy constructor, the __construct() method accepts the address of the other objects as a parameter.
-
-### important of passing arg to constructor:
-
-* Ensuring a "Valid State" from the Start
-
-Without constructor arguments, you often create an "empty" object and then use setters to fill it. The danger is that your code might try to use the object before you've finished setting it up.
-
-In engineering, you don't build a generic "machine" and then decide it's a 50W motor. You build it as a 50W motor from the first bolt.
+* Before a Class: It prevents the class from being extended by any other class. If a developer attempts to create a subclass using the `extends` keyword, PHP will throw a Fatal Error: "Class [ChildClass] may not inherit from final class ([ParentClass])".
 
 ```php 
 <?php
+final class BaseClass {
+   public function test() {
+       echo "BaseClass::test() called\n";
+   }
 
-class student {
-  
-    // Class properties
-    public $name;
-    public $surname;
-    
-    // constructor with parameter
-    public function __construct($name, $surname) {
-        $this->name = $name;
-        $this->surname = $surname;
-    }
+   // As the class is already final, the final keyword is redundant
+   final public function moreTesting() {
+       echo "BaseClass::moreTesting() called\n";
+   }
+}
 
-      // Display student data
-    public function display() {
-        echo "My name is " . $this->name 
-              . "<br>Surname is " . $this->surname; 
+class ChildClass extends BaseClass {
+}
+// Results in Fatal error: Class ChildClass may not inherit from final class (BaseClass)
+?>
+```
+
+
+* Before a Method: It prevents that specific method from being overridden in any child class. While the class itself can still be inherited, any attempt to redefine a `final` method in a subclass will result in a Fatal Error: "Cannot override final method [ParentClass]::methodName".
+
+```php 
+<?php
+class BaseClass {
+   public function test() {
+       echo "BaseClass::test() called\n";
+   }
+   
+   final public function moreTesting() {
+       echo "BaseClass::moreTesting() called\n";
+   }
+}
+
+class ChildClass extends BaseClass {
+   public function moreTesting() {
+       echo "ChildClass::moreTesting() called\n";
+   }
+}
+// Results in Fatal error: Cannot override final method BaseClass::moreTesting()
+?>
+```
+
+* A developer would use the `final` keyword in Java primarily to enforce immutability, prevent unexpected modifications, improve security, and aid performance. It restricts re-assignment of variables, overriding of methods, and inheritance of classes, creating more robust and predictable code.
+
+---
+
+### Overriding Methods
+
+* **Overriding** a method in a child class means redefining a method already present in the parent (superclass) to provide a specific, customized implementation. When an object of the child class calls this method, the child's version executes instead of the parent's. It is used for specialization and runtime polymorphism.
+
+```php
+<?php
+class BaseClass {
+    public function showMessage() {
+        return "Base message";
     }
 }
-    
-// Create class object and pass value
-$user = new student("john", "biber");
-$user->display();    
 
-?>
+class DerivedClass extends BaseClass {
+    #[\Override]
+    public function showMessage() {
+        // Explicitly overriding to provide a different message.
+        return "Derived message";
+    }
+}
+```
+* To call an original parent method from within a child's overridden method in PHP, use the `parent::` keyword followed by the method name.
+
+* **Method Extension**: This is used when you want to keep the original functionality of the parent method and add new behavior on top of it.
+
+```php 
+class ParentClass {
+    public function greet() {
+        return "Hello from Parent!";
+    }
+}
+
+class ChildClass extends ParentClass {
+    public function greet() {
+        // Calling the original parent method
+        $parentMessage = parent::greet(); 
+        return $parentMessage . " And welcome from Child!";
+    }
+}
+```
+
+---
+
+### Abstract Class vs. Interface
+
+The main difference between an **abstract class** and an **interface** is that abstract classes provide a partial base implementation for closely related objects and support constructors/state, whereas interfaces define a contract for behavior (often for unrelated classes) and focus entirely on method signatures rather than implementation.
+
+* 1. Interfaces cannot have properties, while abstract classes can
+* 2. All interface methods must be public, while abstract methods can be public or protected
+* 3. All methods in an interface are abstract, so they cannot be implemented in code and the abstract keyword is not necessary
+* 4. Classes can implement an interface while inheriting from another class at the same time
+
+```php 
+<?php
+interface Animal {
+  public function fromFamily();
+  public function makeSound();
+}
+
+class Cat implements Animal {
+  public function fromFamily() {
+    echo "From family: Felidae (Relatives: lions, tigers, jaguars, lynx, cougars, and cheetahs).<br>";
+  }
+  public function makeSound() {
+    echo "Sound: Meow.";
+  }
+}
+```
+```php
+<?php
+// Abstract base class
+abstract class Car {
+  public $name;
+
+  // Non-abstract method
+  public function __construct($name) {
+    $this->name = $name;
+  }
+
+  // Abstract method - forces child classes to implement it
+  abstract public function intro();
+}
+
+// Child class that extends the abstract class
+class Audi extends Car {
+  public function intro() {
+    return "German quality! I'm an $this->name!";
+  }
+}
+```
+
+* A class can implement multiple interfaces in most modern object-oriented programming languages.
+
+* Syntax: Multiple interfaces are listed after the implements keyword, separated by commas.
+
+---
+
+
+###  Polymorphism
+
+* is a core concept in object-oriented programming (OOP) derived from Greek, meaning "many forms". It refers to the ability of an entity—such as a variable, function, or object—to take on multiple forms, allowing a single interface to represent different underlying data types or behaviors This means one entity can take many forms.
+
+* 1. Multiple Behaviors: The same method can behave differently depending on the object that calls this method.
+* 2. Method Overriding: A child class can redefine a method of its parent class.
+* 3. Method Overloading: We can define multiple methods with the same name but different parameters.
+* 4 . Runtime Decision: At runtime, Java determines which method to call depending on the object's actual class.
+
+```php 
+// Base class Person
+class Person {
+
+    // Method that displays the
+    // role of a person
+    void role() { System.out.println("I am a person."); }
+}
+
+// Derived class Father that
+// overrides the role method
+class Father extends Person {
+
+    // Overridden method to show
+    // the role of a father
+    @Override void role()
+    {
+        System.out.println("I am a father.");
+    }
+}
+
+public class Main {
+    public static void main(String[] args)
+    {
+
+        // Creating a reference of type Person
+        // but initializing it with Father class object
+        Person p = new Father();
+
+        // Calling the role method. It calls the
+        // overridden version in Father class
+        p.role();
+    }
+}
+```
+
+### Polymorphism 
+
+Imagine you are building a checkout page. You want to be able to "process" a payment, but the logic for a Credit Card is very different from the logic for PayPal.
+
+* 1. The Parent Class (The Blueprint)
+First, we define a base class that says, "Any payment method must have a process() method."
+
+* 2. Why is this useful?
+The power of polymorphism is that your Checkout code doesn't need to know which payment method the user chose. It just knows that whatever it is, it has a process() method.
+
+```php
+function finalizeOrder(Payment $method, $total) {
+    // This function works for CreditCard, PayPal, or any future method!
+    $method->process($total);
+}
+
+$userChoice = new PayPal();
+finalizeOrder($userChoice, 150); 
+// Output: Redirecting to PayPal... Deducting $150 from wallet.
+```
+
+
+```php
+
+class CreditCard extends Payment {
+    public function process($amount) {
+        // Logic specific to banks and encryption
+        echo "Validating card... Charging $" . $amount . " to the bank.";
+    }
+}
+
+class PayPal extends Payment {
+    public function process($amount) {
+        // Logic specific to API tokens and digital wallets
+        echo "Redirecting to PayPal... Deducting $" . $amount . " from wallet.";
+    }
+}
+```
+** the Classic Example: "Make Sound"
+
+** Imagine you have a group of animals. Even though they are all different, you know that every animal can "make a sound."
+
+** If you tell a Dog to makeSound(), it will bark. If you tell a Cat to makeSound(), it will meow. You are using the exact same command for both, but the result depends on which animal is "behind" the method.
+
+```php
+
+class Animal {
+    public function makeSound() {
+        echo "Some generic animal sound";
+    }
+}
+
+class Dog extends Animal {
+    public function makeSound() {
+        echo "Woof! ";
+    }
+}
+
+class Cat extends Animal {
+    public function makeSound() {
+        echo "Meow! ";
+    }
+}
+
+// Polymorphism in action:
+$animals = [new Dog(), new Cat()];
+
+foreach ($animals as $animal) {
+    // We don't need to check if it's a dog or cat. 
+    // We just call the same method name.
+    $animal->makeSound(); 
+}
 ```
